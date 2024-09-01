@@ -1,0 +1,54 @@
+import tensorflow as tf
+import tensorflow_datasets as tfds
+from tensorflow.keras import layers, models
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import numpy as np
+
+# Load the IMDb Movie Reviews dataset
+imdb, info = tfds.load("imdb_reviews", with_info=True, as_supervised=True)
+train_data, test_data = imdb['train'], imdb['test']
+
+# Preprocessing: Tokenize and pad sequences
+tokenizer = Tokenizer(num_words=10000, oov_token="<OOV>")
+tokenizer.fit_on_texts([str(x.numpy()) for x, _ in train_data])
+
+# Convert reviews to sequences
+def preprocess_reviews(reviews):
+    sequences = tokenizer.texts_to_sequences([str(review.numpy()) for review, _ in reviews])
+    padded_sequences = pad_sequences(sequences, maxlen=120, padding='post', truncating='post')
+    labels = np.array([label.numpy() for _, label in reviews])
+    return padded_sequences, labels
+
+# Preprocess training and testing data
+train_sequences, train_labels = preprocess_reviews(train_data)
+test_sequences, test_labels = preprocess_reviews(test_data)
+
+# Build the sentiment analysis model
+model = models.Sequential([
+    layers.Embedding(10000, 16, input_length=120),
+    layers.GlobalAveragePooling1D(),
+    layers.Dense(16, activation='relu'),
+    layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the model
+history = model.fit(train_sequences, train_labels, epochs=10, validation_data=(test_sequences, test_labels), verbose=2)
+
+# Evaluate the model
+loss, accuracy = model.evaluate(test_sequences, test_labels)
+print(f"Test Accuracy: {accuracy:.2f}")
+
+# Predict sentiment for new reviews
+new_reviews = ["The movie was fantastic! I loved every bit of it.",
+               "It was a terrible movie, I hated it so much."]
+new_sequences = tokenizer.texts_to_sequences(new_reviews)
+new_padded_sequences = pad_sequences(new_sequences, maxlen=120, padding='post', truncating='post')
+predictions = model.predict(new_padded_sequences)
+
+for i, review in enumerate(new_reviews):
+    sentiment = "Positive" if predictions[i] > 0.5 else "Negative"
+    print(f"Review: {review}")
+    print(f"Predicted Sentiment: {sentiment}\n")
