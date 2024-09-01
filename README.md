@@ -11,11 +11,6 @@
 
 
 
-**Title:** *Developing a Sentiment Analysis Model to Classify Movie Reviews as Positive or Negative*  
-**Dataset:** *IMDb Movie Reviews*  
-**Objective:** *To build and train a machine learning model that can classify movie reviews as positive or negative based on the textual content.*
-
-
 ## **Objective:**
 
 The objective of this project is to develop a sentiment analysis model that can classify movie reviews as either positive or negative. The IMDb Movie Reviews dataset, which contains 50,000 reviews labeled as either positive or negative, was used to train and test the model. The process includes data preprocessing, model construction, training, evaluation, and prediction on new reviews.
