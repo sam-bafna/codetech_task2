@@ -8,7 +8,7 @@
 
 # **Project Report: Developing a Sentiment Analysis Model to Classify Movie Reviews**
 ![image](https://github.com/user-attachments/assets/437a4d00-fd94-41ae-accd-a33e0d2d098d)
-![image](https://github.com/user-attachments/assets/7fddd629-2505-4ed4-b0f1-f38c5c642561)
+
 
 
 **Title:** *Developing a Sentiment Analysis Model to Classify Movie Reviews as Positive or Negative*  
